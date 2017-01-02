@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Audition Form</title>
+        <link rel="stylesheet" href="../bower_components/angular/angular-csp.css">
+        <link rel="stylesheet" href="../bower_components/angular-material/angular-material.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Scope+One" rel="stylesheet">
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+        <main ng-app="AuditionFormApp" ng-controller="MainCtrl" layout="column" layout-align="center center" ng-cloak>
+
+            <h1> {{ formHeading }} </h1>
+            <button id="hair-butt"></button>
+
+            <form>
+                <md-content layout="row" layout-align="start start">
+                    <md-input-container>
+                        <label>First Name</label>
+                        <input type="text" ng-model="user.name.first">
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Last Name</label>
+                        <input type="text" ng-model="user.name.last">
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Birthdate</label>
+                        <input type="date" ng-model="user.birthdate">
+                    </md-input-container>
+                        <h3>Age {{ user.age }} </h3>
+                </md-content>
+                
+                <md-content layout="row" layout-align="start start">
+                    <md-input-container>
+                        <label>Height</label>
+                        <input type="text">
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Weight</label>
+                        <input type="text">
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Hair Length</label>
+                        <md-select aria-label="hairlength" ng-model="user.hairlength">
+                            <md-option><em>None</em></md-option>
+                            <md-option ng-repeat="length in hairLengths" ng-value="length"> {{ length }} </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Hair Color</label>
+                        <md-select id="hair-color" aria-label="hairColor" ng-model="user.hairColor">
+                            <md-option><em>None</em></md-option>
+                            <md-option ng-repeat="color in hairColors" ng-value="color"> {{ color }} </md-option>
+                        </md-select>
+                    </md-input-container>
+                </md-content>
+
+                <md-content layout="row" layout-align="start start">
+                    <md-input-container>
+                        <label>School</label>
+                        <input type="text">
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Grade</label>
+                        <input type="number">
+                    </md-input-container>
+                </md-content>
+
+                <md-content layout="row" layout-align="start start">
+                    <md-input-container >
+                        <label>Address</label>
+                        <input ng-model="user.address">
+                    </md-input-container>
+                    <md-input-container >
+                        <label>City</label>
+                        <input ng-model="user.city">
+                    </md-input-container>
+                    <md-input-container >
+                        <label>zip</label>
+                        <input ng-model="user.state">
+                    </md-input-container>
+                </md-content>
+
+                <md-content layout="row" layout-align="start start">
+                    <md-input-container>
+                        <label>Email</label>
+                        <input ng-model="user.email" type="email">
+                    </md-input-container>
+                </md-content>
+
+                <md-content layout="row" layout-align="start start">
+                    <md-input-container>
+                        <label>Home Phone</label>
+                        <input type="tel" ng-model="user.homePhone" ng-blur="phoneNumberFormat('homePhone')">
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Alternate Phone</label>
+                        <input type="tel" ng-model="user.alternatePhone" ng-blur="phoneNumberFormat('alternatePhone')">
+                    </md-input-container>
+                </md-content>
+
+                <md-content>
+                    <md-input-container>
+                        <p>Are you interested in a small or large role? </p>
+                        <md-select aria-label="roleSize" ng-model="user.roleSize">
+                            <md-option><em>None</em></md-option>
+                            <md-option ng-repeat="roleSize in roleSizes" ng-value="roleSize"> {{ roleSize }} </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container>
+                        <p>Will you accept any role?</p>
+                        <md-select aria-label="acceptAnyRole" ng-model="acceptAnyRole">
+                            <md-option>None</md-option>
+                            <md-option ng-repeat="response in yesorno" ng-value="response"> {{ response }} </md-option>
+                        </md-select>
+                    </md-input-container>
+                </md-content>
+
+                <md-content>
+                    <md-input-container>
+                        <p>If not cast, are there other areas of production you would be interested in?</p>
+                        <input aria-label="what are you interested in" type="text">
+                    </md-input-container>
+                </md-content>
+            </form>
+
+        </main>
+        <script src="../bower_components/angular/angular.min.js"></script>
+        <script src="../bower_components/angular-aria/angular-aria.min.js"></script>
+        <script src="../bower_components/angular-animate/angular-animate.min.js"></script>
+        <script src="../bower_components/angular-material/angular-material.min.js"></script>
+        <script src="auditionFormApp.js"></script>
+    </body>
+</html>

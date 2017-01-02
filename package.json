@@ -1,0 +1,42 @@
+{
+  "name": "pact-audition-form",
+  "productName": "pact-audition-form",
+  "version": "1.0.0",
+  "description": "My Electron application description",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "publish": "electron-forge package",
+    "lint": "eslint src"
+  },
+  "keywords": [],
+  "author": "alancecil",
+  "license": "MIT",
+  "config": {
+    "forge": {
+      "make_targets": {
+        "darwin": [
+          "zip"
+        ]
+      },
+      "electronPackagerConfig": {},
+      "electronWinstallerConfig": {
+        "name": "pact_audition_form"
+      },
+      "electronInstallerDebian": {},
+      "electronInstallerRedhat": {}
+    }
+  },
+  "dependencies": {
+    "electron-compile": "^5.1.1"
+  },
+  "devDependencies": {
+    "babel-preset-stage-0": "^6.16.0",
+    "electron-prebuilt-compile": "1.4.12",
+    "eslint": "^3.12.2",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.8.0"
+  }
+}

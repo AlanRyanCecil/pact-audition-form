@@ -1,0 +1,13 @@
+body {
+    /*font-family: 'Scope One', serif;*/
+    font-family: 'Montserrat', sans-serif;
+    /*font-size: 1.5vw;*/
+}
+
+md-input-container {
+    margin-left: 3vw;
+}
+
+.hair-radio {
+    display: inline-block !important;
+}
