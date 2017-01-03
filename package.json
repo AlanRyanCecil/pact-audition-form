@@ -1,6 +1,6 @@
 {
-  "name": "pact-audition-form",
-  "productName": "pact-audition-form",
+  "name": "inForm",
+  "productName": "inForm",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": "src/main.js",

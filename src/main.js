@@ -1,9 +1,10 @@
 const electron = require('electron');
-const { app, BrowserWindow } = electron;
+const { app, BrowserWindow, ipcMain: ipc } = electron;
 const path = require('path');
 const url = require('url');
 
 let mainWindow;
+let userDatabaseDirectory = app.getPath('desktop');
 
 function createWindow () {
     const screen = electron.screen.getPrimaryDisplay();
@@ -29,10 +30,6 @@ function createWindow () {
         mainWindow = null;
     });
 
-    let hairColor = document.getElementById('hair-color');
-    document.getElementById('hair-butt').addEventListener('click', _=> {
-        console.log(hairColor.text());
-    }
+};
 
-});
 app.on('ready', createWindow);

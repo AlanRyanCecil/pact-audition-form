@@ -12,21 +12,21 @@
         <main ng-app="AuditionFormApp" ng-controller="MainCtrl" layout="column" layout-align="center center" ng-cloak>
 
             <h1> {{ formHeading }} </h1>
-            <button id="hair-butt"></button>
+            <button id="save-user">save user</button>
 
             <form>
                 <md-content layout="row" layout-align="start start">
                     <md-input-container>
                         <label>First Name</label>
-                        <input type="text" ng-model="user.name.first">
+                        <input id="name-first" class="user-definition" type="text" ng-model="user.name.first">
                     </md-input-container>
                     <md-input-container>
                         <label>Last Name</label>
-                        <input type="text" ng-model="user.name.last">
+                        <input id="name-last" class="user-definition" type="text" ng-model="user.name.last">
                     </md-input-container>
                     <md-input-container>
                         <label>Birthdate</label>
-                        <input type="date" ng-model="user.birthdate">
+                        <input id="birthdate" class="user-definition" type="date" ng-model="user.birthdate">
                     </md-input-container>
                         <h3>Age {{ user.age }} </h3>
                 </md-content>
@@ -126,10 +126,12 @@
             </form>
 
         </main>
+
         <script src="../bower_components/angular/angular.min.js"></script>
         <script src="../bower_components/angular-aria/angular-aria.min.js"></script>
         <script src="../bower_components/angular-animate/angular-animate.min.js"></script>
         <script src="../bower_components/angular-material/angular-material.min.js"></script>
         <script src="auditionFormApp.js"></script>
+        <script> require('./renderer') </script>
     </body>
 </html>

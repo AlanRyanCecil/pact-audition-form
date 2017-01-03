@@ -27,7 +27,7 @@ angular.module('AuditionFormApp', ['ngMaterial'])
         function typeBuffer(obj) {
             $timeout.cancel(typeTimeout);
             typeTimeout = $timeout(_=> {
-                $log.log($scope.user);
+                // $log.log($scope.user);
             }, 1000);
         }
 
@@ -51,4 +51,5 @@ angular.module('AuditionFormApp', ['ngMaterial'])
                 }
             }
         }
+    module.exports.user = $scope.user;
 }]);
