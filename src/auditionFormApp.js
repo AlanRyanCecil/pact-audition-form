@@ -2,41 +2,59 @@
 
 angular.module('AuditionFormApp', ['ngMaterial'])
 
-    .controller('MainCtrl', ['$scope', '$timeout', '$log', function ($scope, $timeout, $log){
+    .controller('MainCtrl', ['$scope', '$document', '$timeout', '$log', function ($scope, $document, $timeout, $log){
         $scope.formHeading = 'Audition Signup Form';
         $scope.hairLengths = ['short', 'medium', 'long'];
         $scope.hairColors = ['black', 'brown', 'blonde', 'auburn', 'red', 'gray', 'white'];
         $scope.roleSizes = ['small', 'large', 'any size'];
         $scope.yesorno = ['yes', 'no'];
 
+        const ipc = require('electron').ipcRenderer;
+
         $scope.user = {
             name: {
-                first: null,
-                last: null
+                first: '',
+                last: ''
             },
-            birthdate: null,
-            age: null,
-            hairLength: null,
-            hairColor: null,
-            roleSizes: null,
+            birthdate: '',
+            age: '',
+            height: '',
+            weight: '',
+            hairLength: '',
+            hairColor: '',
+            roleSizes: '',
             homePhone: '',
             alternatePhone: ''
         };
 
-        let typeTimeout;
-        function typeBuffer(obj) {
-            $timeout.cancel(typeTimeout);
-            typeTimeout = $timeout(_=> {
-                // $log.log($scope.user);
-            }, 1000);
+        let eventTimeout;
+        function eventBuffer(key, val, delay) {
+            $timeout.cancel(eventTimeout);
+            eventTimeout = $timeout(_=> {
+                
+            }, delay);
         }
 
-        $scope.$watchCollection('user', user => {
-            typeBuffer(user);
+        $scope.$watchCollection('user', (newObj, oldObj) => {
+            let key;
+            for (key in newObj) {
+                if (newObj[key] !== oldObj[key] && key !== 'birthdate') {
+                    ipc.send('updateUser', key, newObj[key]);
+                }
+            }
         });
 
         $scope.$watchCollection('user.name', username => {
-            typeBuffer(username);
+            // typeBuffer(username);
+        });
+
+        ipc.on('userHistorySend', (event, history) => {
+            console.log('Angular Found: ');
+            for (let item in history) {
+                if (item !== 'name' && item !== 'birthdate') {
+                    $scope.user[item] = history[item];
+                }
+            }
         });
 
         $scope.phoneNumberFormat = (phone) => {

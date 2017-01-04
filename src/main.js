@@ -33,3 +33,11 @@ function createWindow () {
 };
 
 app.on('ready', createWindow);
+
+ipc.on('updateUser', (event, key, value) => {
+    mainWindow.webContents.send('updateUser', key, value);
+});
+
+ipc.on('userHistoryFound', (event, history) => {
+    mainWindow.webContents.send('userHistorySend', history);
+});

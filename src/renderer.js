@@ -1,25 +1,41 @@
-const electron = require('electron');
-const { ipcRenderer: ipc } = electron;
-const {remote} = electron;
-const {app} = remote;
-const inFile = require('./inFileSystem');
-const audition = require('./auditionFormApp');
-const verification = require('./userVerification');
+const electron = require('electron'),
+    { ipcRenderer: ipc } = electron,
+    {remote} = electron,
+    {app} = remote,
+    audition = require('./auditionFormApp'),
+    inFile = require('./modules/inFileSystem'),
+    verification = require('./modules/userVerification');
 
-let userDatabaseDirectory = app.getPath('desktop');
-let userDatabase = inFile.getUserDatabase(userDatabaseDirectory);
+let userDatabaseDirectory = app.getPath('desktop'),
+    userDatabase = inFile.getUserDatabase(userDatabaseDirectory),
+    user = audition.user,
+    userKey;
+
+function userHistory() {
+    user = audition.user;
+    userKey = verification.getUserKey(user);
+    userDatabase = inFile.getUserDatabase(userDatabaseDirectory);
+    return verification.userLookup(userKey, userDatabase);
+}
+
+ipc.on('updateUser', (event, key, value) => {
+    console.log('attempted update');
+    if (userHistory()) {
+        inFile.writeUser(userKey, user, userDatabase, userDatabaseDirectory);
+        console.log('update');
+    }
+});
 
 document.getElementById('save-user').addEventListener('click', _=> {
-    userDatabase = inFile.getUserDatabase(userDatabaseDirectory);
-    inFile.writeUser(audition.user, userDatabase, userDatabaseDirectory);
+    userHistory();
+    inFile.writeUser(userKey, user, userDatabase, userDatabaseDirectory);
 });
 
 const userDefinition = document.getElementsByClassName('user-definition');
 
 Array.from(userDefinition).map(elem => {
     elem.addEventListener('change', event => {
-        let id = event.target.id;
-        let value = event.target.value;
-        verification.verify(id, value, userDatabase);
+        let foundHistory = userHistory();
+        if (foundHistory) ipc.send('userHistoryFound', foundHistory);
     });
 });

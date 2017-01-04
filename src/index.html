@@ -34,15 +34,15 @@
                 <md-content layout="row" layout-align="start start">
                     <md-input-container>
                         <label>Height</label>
-                        <input type="text">
+                        <input type="text" ng-model="user.height">
                     </md-input-container>
                     <md-input-container>
                         <label>Weight</label>
-                        <input type="text">
+                        <input type="text" ng-model="user.weight">
                     </md-input-container>
                     <md-input-container>
                         <label>Hair Length</label>
-                        <md-select aria-label="hairlength" ng-model="user.hairlength">
+                        <md-select aria-label="hairlength" ng-model="user.hairLength">
                             <md-option><em>None</em></md-option>
                             <md-option ng-repeat="length in hairLengths" ng-value="length"> {{ length }} </md-option>
                         </md-select>
