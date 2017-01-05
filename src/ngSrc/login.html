@@ -1,0 +1,17 @@
+<form layout="column" layout-align="center center">
+    <md-content layout="row" layout-align="center center">
+        <md-input-container>
+            <label>First Name</label>
+            <input id="name-first" class="user-definition" type="text" ng-model="user.name.first" required>
+        </md-input-container>
+        <md-input-container>
+            <label>Last Name</label>
+            <input id="name-last" class="user-definition" type="text" ng-model="user.name.last" required>
+        </md-input-container>
+        <md-input-container>
+            <label>Birthdate</label>
+            <input id="birthdate" class="user-definition" type="date" ng-model="user.birthdate" required>
+        </md-input-container>
+    </md-content>
+    <md-button id="save-user" class="md-raised md-primary" type="submit">login</md-button>
+</form>

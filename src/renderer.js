@@ -2,7 +2,7 @@ const electron = require('electron'),
     { ipcRenderer: ipc } = electron,
     {remote} = electron,
     {app} = remote,
-    audition = require('./auditionFormApp'),
+    audition = require('./ngSrc/auditionFormApp'),
     inFile = require('./modules/inFileSystem'),
     verification = require('./modules/userVerification');
 
@@ -18,6 +18,11 @@ function userHistory() {
     return verification.userLookup(userKey, userDatabase);
 }
 
+ipc.on('userLogin', _=> {
+    userHistory();
+    inFile.writeUser(userKey, user, userDatabase, userDatabaseDirectory);
+});
+
 ipc.on('updateUser', (event, key, value) => {
     console.log('attempted update');
     if (userHistory()) {
@@ -26,10 +31,15 @@ ipc.on('updateUser', (event, key, value) => {
     }
 });
 
-document.getElementById('save-user').addEventListener('click', _=> {
-    userHistory();
-    inFile.writeUser(userKey, user, userDatabase, userDatabaseDirectory);
-});
+ipc.on('userLogout', _=> {
+    user = null;
+    userKey = null;
+})
+
+// document.getElementById('user-login').addEventListener('click', _=> {
+//     userHistory();
+//     inFile.writeUser(userKey, user, userDatabase, userDatabaseDirectory);
+// });
 
 const userDefinition = document.getElementsByClassName('user-definition');
 
@@ -37,5 +47,6 @@ Array.from(userDefinition).map(elem => {
     elem.addEventListener('change', event => {
         let foundHistory = userHistory();
         if (foundHistory) ipc.send('userHistoryFound', foundHistory);
+        if (userKey === 'davidgotleibsatnov111111') ipc.send('adminLogin');
     });
 });

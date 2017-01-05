@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('AuditionFormApp', ['ngMaterial'])
+angular.module('AuditionFormApp', ['ui.router', 'ngMaterial'])
 
     .controller('MainCtrl', ['$scope', '$document', '$timeout', '$log', function ($scope, $document, $timeout, $log){
         $scope.formHeading = 'Audition Signup Form';
@@ -10,42 +10,63 @@ angular.module('AuditionFormApp', ['ngMaterial'])
         $scope.yesorno = ['yes', 'no'];
 
         const ipc = require('electron').ipcRenderer;
+        const configTemp = require('../configTemplate.js');
 
-        $scope.user = {
-            name: {
-                first: '',
-                last: ''
-            },
-            birthdate: '',
-            age: '',
-            height: '',
-            weight: '',
-            hairLength: '',
-            hairColor: '',
-            roleSizes: '',
-            homePhone: '',
-            alternatePhone: ''
-        };
+        $scope.user = angular.extend({}, configTemp.user);
+
+        $scope.loggedIn = false;
+        $scope.admin = false;
+
+        $scope.sendUserLogin = _=> {
+            $scope.loggedIn = true;
+            ipc.send('userLogin');
+        }
+
+        $scope.logout = _=> {
+            ipc.send('userLogout');
+        }
+
+        ipc.on('adminLogin', _=> {
+            $scope.admin = true;
+            console.log('admin logged in!');
+        });
+
+        $scope.addGuardian = _=> {
+            let newGuardian = angular.extend({}, configTemp.guardian);
+            $scope.user.guardians.push(newGuardian);
+        }
+
+        $scope.removeGuardian = index => {
+            console.log(index)
+            $scope.user.guardians.splice(index, 1);
+        }
 
         let eventTimeout;
-        function eventBuffer(key, val, delay) {
+        function eventBuffer(delay, event, d1, d2, d3) {
             $timeout.cancel(eventTimeout);
             eventTimeout = $timeout(_=> {
-                
+                ipc.send(event, d1, d2, d3);
             }, delay);
+        }
+
+        $scope.updateUser = _=> {
+            eventBuffer(500, 'updateUser');
         }
 
         $scope.$watchCollection('user', (newObj, oldObj) => {
             let key;
             for (key in newObj) {
                 if (newObj[key] !== oldObj[key] && key !== 'birthdate') {
-                    ipc.send('updateUser', key, newObj[key]);
+                    eventBuffer(500, 'updateUser', key, newObj[key])
                 }
             }
         });
 
         $scope.$watchCollection('user.name', username => {
-            // typeBuffer(username);
+            eventBuffer(500, 'updateUser', username);
+        });
+        $scope.$watchCollection('user.guardians', username => {
+            eventBuffer(500, 'updateUser', username);
         });
 
         ipc.on('userHistorySend', (event, history) => {
@@ -57,15 +78,14 @@ angular.module('AuditionFormApp', ['ngMaterial'])
             }
         });
 
-        $scope.phoneNumberFormat = (phone) => {
-            let number = $scope.user[phone].match(/[\d+.+]/g);
+        $scope.phoneNumberFormat = (number) => {
+            number = number.match(/[\d+.+]/g);
             if (number) {
                 if (number.length === 10) {
                 let phonenumber = number.join('').replace(/(\d{3})(\d{3})(\d{4})/g, (match, area, pre, suff) => {
                     return `(${area}) ${pre}-${suff}`;
                 });
-                    $scope.user[phone] = phonenumber;
-                    $log.log(phonenumber);
+                    return phonenumber;
                 }
             }
         }
