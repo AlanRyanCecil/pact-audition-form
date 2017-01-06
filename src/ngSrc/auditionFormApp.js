@@ -17,19 +17,39 @@ angular.module('AuditionFormApp', ['ui.router', 'ngMaterial'])
         $scope.loggedIn = false;
         $scope.admin = false;
 
-        $scope.sendUserLogin = _=> {
-            $scope.loggedIn = true;
-            ipc.send('userLogin');
-        }
-
         $scope.logout = _=> {
             ipc.send('userLogout');
         }
 
-        ipc.on('adminLogin', _=> {
+        ipc.on('adminLogin', (event, userDatabase) => {
             $scope.admin = true;
+            $scope.userDatabase = userDatabase;
             console.log('admin logged in!');
         });
+
+        ipc.on('userLogin', _=> {
+            $scope.loggedIn = true;
+            // ipc.send('userLogin');
+        });
+
+        ipc.on('userHistoryFound', (event, history) => {
+            console.log('Angular Found: ');
+            $scope.loggedIn = true;
+            for (let item in history) {
+                if (item !== 'name' && item !== 'birthdate') {
+                    $scope.user[item] = history[item];
+                }
+            }
+        });
+
+        $scope.adminEditUser = user => {
+            console.log('user: ', user);
+        }
+
+        $scope.adminRemoveUser = user => {
+            ipc.send('removeUser', user);
+            delete $scope.userDatabase[user.key];
+        }
 
         $scope.addGuardian = _=> {
             let newGuardian = angular.extend({}, configTemp.guardian);
@@ -50,33 +70,26 @@ angular.module('AuditionFormApp', ['ui.router', 'ngMaterial'])
         }
 
         $scope.updateUser = _=> {
-            eventBuffer(500, 'updateUser');
+            eventBuffer(500, 'updateUser', 'user');
         }
 
         $scope.$watchCollection('user', (newObj, oldObj) => {
             let key;
             for (key in newObj) {
                 if (newObj[key] !== oldObj[key] && key !== 'birthdate') {
-                    eventBuffer(500, 'updateUser', key, newObj[key])
+                    eventBuffer(500, 'updateUser', 'user');
                 }
             }
         });
 
         $scope.$watchCollection('user.name', username => {
-            eventBuffer(500, 'updateUser', username);
-        });
-        $scope.$watchCollection('user.guardians', username => {
-            eventBuffer(500, 'updateUser', username);
+            eventBuffer(500, 'updateUser', 'user');
         });
 
-        ipc.on('userHistorySend', (event, history) => {
-            console.log('Angular Found: ');
-            for (let item in history) {
-                if (item !== 'name' && item !== 'birthdate') {
-                    $scope.user[item] = history[item];
-                }
-            }
+        $scope.$watchCollection('user.guardians', username => {
+            eventBuffer(500, 'updateUser', 'user');
         });
+
 
         $scope.phoneNumberFormat = (number) => {
             number = number.match(/[\d+.+]/g);

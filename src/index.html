@@ -13,7 +13,7 @@
         <main ng-app="AuditionFormApp" ng-controller="MainCtrl" layout="column" layout-align="center center" layout-padding ng-cloak>
 
             <h1> {{ formHeading }} </h1>
-                <form id="loginForm" layout="column" layout-align="center center" ng-submit="sendUserLogin()">
+                <form id="login-form" layout="column" layout-align="center center"  ng-hide="loggedIn || admin">
                     <md-content layout="row" layout-align="center center">
                         <md-input-container>
                             <label>First Name</label>
@@ -28,9 +28,13 @@
                             <input id="birthdate" class="user-definition" type="date" ng-model="user.birthdate" required>
                         </md-input-container>
                     </md-content>
-                    <md-button id="user-login" class="md-raised md-primary" type="submit" ng-hide="loggedIn">login</md-button>
+                    <md-button id="user-login" class="md-raised md-primary" type="submit">login</md-button>
                 </form>
                 <form ng-show="!admin && loggedIn">
+                    <md-content>
+                        <h3> {{ user.name.first + ' ' + user.name.last }} </h3>
+                        <hr>
+                    </md-content>
                     <md-content layout="row" layout-align="start start">
                         <md-input-container>
                             <input type="text" ng-model="user.height" aria-label="hairlength">
@@ -166,9 +170,32 @@
                         <md-button id="user-login" class="md-raised md-primary" ng-click="logout()">logout</md-button>
                     </div>
                 </form>
-                <div layout="row" layout-align="center center" ng-show="admin">
-                    <md-button id="user-login" class="md-raised md-primary" ng-click="logout()">admin logout</md-button>
-                </div>
+                <section layout="column" layout-align="center center" ng-show="admin">
+
+                    <div ng-repeat="user in userDatabase" layout="row" layout-align="center center" style="width: 100vw;">
+                        <md-card flex="60">
+                            <md-card-title>
+                                <md-card-title-text>
+                                    <span class="md-headline"> {{ user.name.first + ' ' + user.name.last }} </span>
+                                    <span class="md-subhead">Small</span>
+                                </md-card-title-text>
+                                <md-card-title-media>
+                                    <div class="md-media-sm card-media"></div>
+                                </md-card-title-media>
+                            </md-card-title>
+                            <md-card-actions layout="row" layout-align="end center">
+                                <md-button ng-click="adminEditUser(user)">edit</md-button>
+                                <md-button ng-click="adminRemoveUser(user)">remove</md-button>
+                            </md-card-actions>
+                        </md-card>
+                    </div>
+
+
+
+                    <div layout="row" layout-align="end end">
+                        <md-button id="user-login" class="md-raised md-primary" ng-click="logout()">admin logout</md-button>
+                    </div>
+                </section>
 
         </main>
 

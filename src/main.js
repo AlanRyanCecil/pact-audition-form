@@ -1,3 +1,4 @@
+'use strict';
 const electron = require('electron');
 const { app, BrowserWindow, ipcMain: ipc } = electron;
 const path = require('path');
@@ -32,24 +33,24 @@ function createWindow () {
     // mainWindow.openDevTools();
     mainWindow.loadURL(urler('index.html'));
 
-    // mainWindow.on('closed', _=> {
-    //     mainWindow = null;
-    // });
+    mainWindow.on('closed', _=> {
+        mainWindow = null;
+    });
     // windows.push(mainWindow);
 };
 
 app.on('ready', createWindow);
 
-ipc.on('userLogin', _=> {
-    mainWindow.webContents.send('userLogin');
-});
-
-ipc.on('adminLogin', _=> {
-    mainWindow.webContents.send('adminLogin');
+ipc.on('adminLogin', (event, userDatabase) => {
+    mainWindow.webContents.send('adminLogin', userDatabase);
 });
 
 ipc.on('userHistoryFound', (event, history) => {
-    mainWindow.webContents.send('userHistorySend', history);
+    mainWindow.webContents.send('userHistoryFound', history);
+});
+
+ipc.on('userLogin', _=> {
+    mainWindow.webContents.send('userLogin');
 });
 
 ipc.on('updateUser', (event, key, value) => {
@@ -59,4 +60,8 @@ ipc.on('updateUser', (event, key, value) => {
 ipc.on('userLogout', _=> {
     mainWindow.loadURL(urler('index.html'));
     // mainWindow.webContents.send('userLogout');
+});
+
+ipc.on('removeUser', (event, user) => {
+    mainWindow.webContents.send('removeUser', user);
 });

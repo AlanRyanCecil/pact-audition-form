@@ -1,27 +1,41 @@
 const fs = require('fs');
 const path = require('path');
+const appDirectory = 'inForm';
+const databaseFileName = 'userDatabase.json';
 
-let userDatabasePath;
 
-exports.getUserDatabase = targetPath => {
-    const empty= '{}';
-    let userDatabase;
-    let userDatabaseDirectory = path.join(targetPath, 'inForm');
-    userDatabasePath = path.join(userDatabaseDirectory, 'userDatabase.json');
 
-    if (!fs.existsSync(userDatabaseDirectory)) {
-        fs.mkdirSync(userDatabaseDirectory);
+exports.getFilePath = (directoryPath, fileName) => {
+    return path.join(directoryPath, appDirectory, fileName);
+}
+
+exports.getExistingOrCreateNewFile = (databaseDirectory, fileName, dataForNewFile) => {
+    let userDatabase,
+        userDirectory = path.join(databaseDirectory, appDirectory),
+        filePath = path.join(userDirectory, fileName)
+
+    if (!fs.existsSync(userDirectory)) {
+        fs.mkdirSync(userDirectory);
     }
-    if (!fs.existsSync(userDatabasePath)) {
-        fs.writeFileSync(userDatabasePath, empty);
+    if (!fs.existsSync(filePath)) {
+        console.log('dataForNewFile: ', dataForNewFile)
+        fs.writeFileSync(filePath, dataForNewFile);
     }
-    userDatabase = fs.readFileSync(userDatabasePath);
+    userDatabase = fs.readFileSync(filePath);
     return userDatabase;
 }
 
-exports.writeUser = (key, user, database) => {
+exports.writeUser = (key, user, database, directory, fileName) => {
+    user.key = key;
+    let filePath = path.join(directory, appDirectory, fileName);
     let userFileJSON = JSON.parse(database);
     userFileJSON[key] = user;
     let userFileString = JSON.stringify(userFileJSON, null, 4);
-    fs.writeFileSync(userDatabasePath, userFileString);
+    fs.writeFileSync(filePath, userFileString);
+}
+
+exports.updateUserDatabase = (databaseDirectory, database) => {
+    let filePath = path.join(databaseDirectory, appDirectory, databaseFileName);
+    console.info('filePath: ', filePath);
+    fs.writeFileSync(filePath, JSON.stringify(database, null, 4));
 }
