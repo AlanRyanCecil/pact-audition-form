@@ -5,9 +5,33 @@ body {
 }
 
 md-input-container {
-    margin-left: 3vw;
+    /*margin-left: 3vw;*/
 }
 
-.remove-guard-button {
+.name-headder {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3vw;
+    min-width: 10px;
+    white-space: pre;
+    background-color: #303030;
+    color: white;
+    border: none;
+}
+
+.name-headder:focus {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3vw;
+    background-color: #303030;
+    color: white;
+    border: none;
+    outline: none;
+}
+
+.remove-button {
     display: inline-block !important;
+}
+
+ul {
+    list-style-type: none;
+    text-align: right;
 }

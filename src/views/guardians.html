@@ -1,0 +1,38 @@
+<div>
+    <h2>Guardians</h2>
+    <hr>
+    <md-content ng-repeat="guardian in user.guardians">
+        <div id="guardian{{ $index }}">
+            <md-input-container>
+                <label>Name</label>
+                <input class="guardian" aria-label="guardian" type="text" ng-model="guardian.name" ng-change="updateUser()">
+            </md-input-container>
+            <md-input-container>
+                <label>Relationship</label>
+                <input class="guardian" aria-label="guardian" type="text" ng-model="guardian.relationship" ng-change="updateUser()">
+            </md-input-container>
+            <md-input-container>
+                <label>Phone Number</label>
+                <input class="guardian" aria-label="guardian" type="tel" ng-model="guardian.phonenumber"
+                    ng-blur=" guardian.phonenumber = phoneNumberFormat(guardian.phonenumber)" ng-change="updateUser()">
+            </md-input-container>
+            <md-input-container>
+                <label>Email</label>
+                <input class="guardian" aria-label="guardian" type="email" ng-model="guardian.email" ng-change="updateUser()">
+            </md-input-container>
+            <md-input-container>
+                <label>Occupation</label>
+                <input class="guardian" aria-label="guardian" type="text" ng-model="guardian.occupation" ng-change="updateUser()">
+            </md-input-container>
+            <md-input-container>
+                <label>Work Address</label>
+                <textarea class="guardian" aria-label="guardian" ng-model="guardian.workAddress" ng-change="updateUser()"></textarea>
+            </md-input-container>
+            <div class="remove-guard-button" layout="row" layout-align="end end">
+                <md-button class="md-warn remove-button" aria-label="delete" ng-click="removeGuardian($index)">remove</md-button>
+            </div>
+            <hr>
+        </div>
+    </md-content>
+    <md-button class="md-primary" ng-click="addGuardian()">add guardian</md-button>
+</div>

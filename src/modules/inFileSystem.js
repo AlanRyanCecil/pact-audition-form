@@ -9,6 +9,20 @@ exports.getFilePath = (directoryPath, fileName) => {
     return path.join(directoryPath, appDirectory, fileName);
 }
 
+function alphabetize (database) {
+    let arr = [],
+        obj = {};
+
+    for (let key in database) {
+        arr.push(key);
+    }
+    arr.sort((a, b) => a > b);
+    for (let index in arr) {
+        obj[arr[index]] = database[arr[index]];
+    }
+    return obj;
+}
+
 exports.getExistingOrCreateNewFile = (databaseDirectory, fileName, dataForNewFile) => {
     let userDatabase,
         userDirectory = path.join(databaseDirectory, appDirectory),
@@ -30,7 +44,7 @@ exports.writeUser = (key, user, database, directory, fileName) => {
     let filePath = path.join(directory, appDirectory, fileName);
     let userFileJSON = JSON.parse(database);
     userFileJSON[key] = user;
-    let userFileString = JSON.stringify(userFileJSON, null, 4);
+    let userFileString = JSON.stringify(alphabetize(userFileJSON), null, 4);
     fs.writeFileSync(filePath, userFileString);
 }
 

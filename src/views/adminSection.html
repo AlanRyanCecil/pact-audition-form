@@ -1,0 +1,12 @@
+<section layout="column" layout-align="center center" ng-show="admin">
+    <ul>
+        <li ng-repeat="user in userDatabase">
+            <md-button class="md-primary"> {{ user.name.first + ' ' + user.name.last }} </md-button>
+            <md-button class="md-warn">x</md-button>
+        </li>
+    </ul>
+
+    <div layout="row" layout-align="end end">
+        <md-button class="md-raised md-primary" ng-click="logout()">admin logout</md-button>
+    </div>
+</section>

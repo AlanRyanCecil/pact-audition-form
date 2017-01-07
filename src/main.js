@@ -28,6 +28,7 @@ function createWindow () {
     windowProperties.width = width;
     windowProperties.resize = false;
     windowProperties.frame = false;
+    windowProperties.backgroundColor = '#262626';
 
     mainWindow = new BrowserWindow(windowProperties);
     // mainWindow.openDevTools();
@@ -36,13 +37,16 @@ function createWindow () {
     mainWindow.on('closed', _=> {
         mainWindow = null;
     });
-    // windows.push(mainWindow);
 };
 
 app.on('ready', createWindow);
 
 ipc.on('adminLogin', (event, userDatabase) => {
     mainWindow.webContents.send('adminLogin', userDatabase);
+});
+
+ipc.on('login-submit', _=> {
+    mainWindow.webContents.send('login-submit');
 });
 
 ipc.on('userHistoryFound', (event, history) => {

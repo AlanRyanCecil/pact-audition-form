@@ -1,8 +1,14 @@
+(function(){
 'use strict';
 
-angular.module('AuditionFormApp', ['ui.router', 'ngMaterial'])
+angular.module('AuditionFormApp', ['ngMaterial'])
+    .config(function($mdThemingProvider) {
+        $mdThemingProvider.theme('default').dark()
+        .primaryPalette('blue')
+        .accentPalette('orange');
+    })
 
-    .controller('MainCtrl', ['$scope', '$document', '$timeout', '$log', function ($scope, $document, $timeout, $log){
+    .controller('MainCtrl', ['$scope', '$timeout', '$log', function ($scope, $timeout, $log){
         $scope.formHeading = 'Audition Signup Form';
         $scope.hairLengths = ['short', 'medium', 'long'];
         $scope.hairColors = ['black', 'brown', 'blonde', 'auburn', 'red', 'gray', 'white'];
@@ -10,18 +16,24 @@ angular.module('AuditionFormApp', ['ui.router', 'ngMaterial'])
         $scope.yesorno = ['yes', 'no'];
 
         const ipc = require('electron').ipcRenderer;
-        const configTemp = require('../configTemplate.js');
+        const configTemp = require('./configTemplate.js');
 
         $scope.user = angular.extend({}, configTemp.user);
+        $scope.user.guardians.push(configTemp.guardian);
 
         $scope.loggedIn = false;
         $scope.admin = false;
 
-        $scope.logout = _=> {
-            ipc.send('userLogout');
+        $scope.loginSubmit = function () {
+            ipc.send('login-submit');
         }
 
-        ipc.on('adminLogin', (event, userDatabase) => {
+        $scope.logout = function () {
+            angular.element('#admin-section').slideUp();
+            eventBuffer(500, 'userLogout');
+        }
+
+        ipc.on('adminLogin', function(event, userDatabase) {
             $scope.admin = true;
             $scope.userDatabase = userDatabase;
             console.log('admin logged in!');
@@ -29,7 +41,6 @@ angular.module('AuditionFormApp', ['ui.router', 'ngMaterial'])
 
         ipc.on('userLogin', _=> {
             $scope.loggedIn = true;
-            // ipc.send('userLogin');
         });
 
         ipc.on('userHistoryFound', (event, history) => {
@@ -42,23 +53,31 @@ angular.module('AuditionFormApp', ['ui.router', 'ngMaterial'])
             }
         });
 
-        $scope.adminEditUser = user => {
+        $scope.cardToggle = function (index) {
+            angular.element(`#userName${index}`).slideUp();
+            angular.element(`#user${index}`).slideUp();
+        }
+
+        $scope.adminEditUser = function (user) {
             console.log('user: ', user);
         }
 
-        $scope.adminRemoveUser = user => {
+        $scope.adminRemoveUser = function (user, index) {
             ipc.send('removeUser', user);
-            delete $scope.userDatabase[user.key];
+            angular.element(`#user${index}`).slideUp();
         }
 
-        $scope.addGuardian = _=> {
+        $scope.addGuardian = function () {
             let newGuardian = angular.extend({}, configTemp.guardian);
             $scope.user.guardians.push(newGuardian);
         }
 
-        $scope.removeGuardian = index => {
+        $scope.removeGuardian = function (index) {
             console.log(index)
-            $scope.user.guardians.splice(index, 1);
+            angular.element(`#guardian${index}`).slideUp();
+            $timeout(_=> {
+                $scope.user.guardians.splice(index, 1);
+            }, 500);
         }
 
         let eventTimeout;
@@ -69,7 +88,7 @@ angular.module('AuditionFormApp', ['ui.router', 'ngMaterial'])
             }, delay);
         }
 
-        $scope.updateUser = _=> {
+        $scope.updateUser = function () {
             eventBuffer(500, 'updateUser', 'user');
         }
 
@@ -91,7 +110,7 @@ angular.module('AuditionFormApp', ['ui.router', 'ngMaterial'])
         });
 
 
-        $scope.phoneNumberFormat = (number) => {
+        $scope.phoneNumberFormat = function(number) {
             number = number.match(/[\d+.+]/g);
             if (number) {
                 if (number.length === 10) {
@@ -103,4 +122,53 @@ angular.module('AuditionFormApp', ['ui.router', 'ngMaterial'])
             }
         }
     module.exports.user = $scope.user;
-}]);
+}])
+
+    .directive('loginForm', [function () {
+        return {
+            restict: 'E',
+            replace: true,
+            templateUrl: 'views/loginForm.html'
+        }
+    }])
+
+    .directive('mainForm', [function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            templateUrl: 'views/mainForm.html'
+        }
+    }])
+
+    .directive('adminSection', [function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            templateUrl: 'views/adminSection.html'
+        }
+    }])
+
+    .directive('guardiansList', [function () {
+        return {
+            restict: 'E',
+            replace: true,
+            templateUrl: 'views/guardians.html'
+        }
+    }])
+}())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

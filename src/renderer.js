@@ -3,7 +3,7 @@ const electron = require('electron'),
     { ipcRenderer: ipc } = electron,
     {remote} = electron,
     {app} = remote,
-    audition = require('./ngSrc/auditionFormApp'),
+    audition = require('./auditionFormApp'),
     inFile = require('./modules/inFileSystem'),
     verification = require('./modules/userVerification');
 
@@ -19,11 +19,6 @@ function userHistory() {
     userDatabase = inFile.getExistingOrCreateNewFile(userDatabaseDirectory, 'userDatabase.json');
     return verification.userLookup(userKey, userDatabase);
 }
-
-// ipc.on('userLogin', _=> {
-//     userHistory();
-//     inFile.writeUser(userKey, user, userDatabase, userDatabaseDirectory);
-// });
 
 ipc.on('updateUser', (event, userOrAdmin) => {
     let fileName = userOrAdmin.concat('Database.json');
@@ -46,7 +41,8 @@ ipc.on('removeUser', (event, user) => {
     inFile.updateUserDatabase(userDatabaseDirectory, database);
 })
 
-document.getElementById('login-form').addEventListener('submit', _=> {
+// document.getElementById('login-form').addEventListener('submit', _=> {
+ipc.on('login-submit', _=> {
     let foundHistory = userHistory();
     let adminArray = JSON.parse(adminDatabase);
     for (let admin in adminArray) {
