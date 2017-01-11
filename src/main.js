@@ -28,7 +28,8 @@ function createWindow () {
     windowProperties.width = width;
     windowProperties.resize = false;
     windowProperties.frame = false;
-    windowProperties.backgroundColor = '#262626';
+    windowProperties.backgroundColor = '#303030';
+    // windowProperties.backgroundColor = '#262626';
 
     mainWindow = new BrowserWindow(windowProperties);
     // mainWindow.openDevTools();
@@ -57,8 +58,8 @@ ipc.on('userLogin', _=> {
     mainWindow.webContents.send('userLogin');
 });
 
-ipc.on('updateUser', (event, key, value) => {
-    mainWindow.webContents.send('updateUser', key, value);
+ipc.on('updateUser', (event, userOrAdmin, newName, oldName) => {
+    mainWindow.webContents.send('updateUser', userOrAdmin, newName, oldName);
 });
 
 ipc.on('userLogout', _=> {

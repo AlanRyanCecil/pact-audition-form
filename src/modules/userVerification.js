@@ -1,4 +1,4 @@
-exports.getUserKey = user => {
+exports.getUserKey = function (user) {
     let first = user.name.first || '',
         last = user.name.last || '',
 
@@ -11,7 +11,7 @@ exports.getUserKey = user => {
     return [first, last, birthdate].join('');
 }
 
-exports.userLookup = (key, database) => {
+exports.userLookup = function (key, database) {
     let userDatabaseJSON = JSON.parse(database);
     return userDatabaseJSON[key] || false;
 }

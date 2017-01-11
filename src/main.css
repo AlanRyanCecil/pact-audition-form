@@ -10,8 +10,7 @@ md-input-container {
 
 .name-headder {
     font-family: 'Montserrat', sans-serif;
-    font-size: 3vw;
-    min-width: 10px;
+    font-size: 1.8em;
     white-space: pre;
     background-color: #303030;
     color: white;
@@ -20,7 +19,7 @@ md-input-container {
 
 .name-headder:focus {
     font-family: 'Montserrat', sans-serif;
-    font-size: 3vw;
+    font-size: 1.8em;
     background-color: #303030;
     color: white;
     border: none;
@@ -33,5 +32,5 @@ md-input-container {
 
 ul {
     list-style-type: none;
-    text-align: right;
+    text-align: left;
 }

@@ -8,7 +8,7 @@ angular.module('AuditionFormApp', ['ngMaterial'])
         .accentPalette('orange');
     })
 
-    .controller('MainCtrl', ['$scope', '$timeout', '$log', function ($scope, $timeout, $log){
+    .controller('MainCtrl', ['$scope', '$timeout', '$mdDialog', '$log', function ($scope, $timeout, $mdDialog, $log){
         $scope.formHeading = 'Audition Signup Form';
         $scope.hairLengths = ['short', 'medium', 'long'];
         $scope.hairColors = ['black', 'brown', 'blonde', 'auburn', 'red', 'gray', 'white'];
@@ -53,9 +53,33 @@ angular.module('AuditionFormApp', ['ngMaterial'])
             }
         });
 
-        $scope.cardToggle = function (index) {
-            angular.element(`#userName${index}`).slideUp();
-            angular.element(`#user${index}`).slideUp();
+        function showEditMessage (user) {
+            $mdDialog.show({
+                // $mdDialog.confirm({
+                    clickOutsideToClose: true,
+                    templateUrl: 'views/userCards.html',
+                    controller: function (scope, user) {scope.user = user},
+                    locals: {user: user}
+                    // ok: 'close'
+                // })
+           })
+                // .finally(function () {
+                    
+                // });
+        }
+
+        $scope.editUser = function (index) {
+            let userArr = [];
+            for (let key in $scope.userDatabase) {
+                userArr.push(key);
+            }
+            $scope.editingUser = $scope.userDatabase[userArr[index]];
+            showEditMessage($scope.editingUser);
+            console.log($scope.userDatabase[userArr[index]].name.first, $scope.userDatabase[userArr[index]].name.last);
+        }
+
+        $scope.removeUser = function (index) {
+            angular.element(`#user-line${index}`).slideUp();
         }
 
         $scope.adminEditUser = function (user) {
@@ -101,14 +125,14 @@ angular.module('AuditionFormApp', ['ngMaterial'])
             }
         });
 
-        $scope.$watchCollection('user.name', username => {
-            eventBuffer(500, 'updateUser', 'user');
+        $scope.$watchCollection('user.name', (newName, oldName,) => {
+            console.log('name name name: ', newName, oldName);
+            eventBuffer(500, 'updateUser', 'user', newName, oldName);
         });
 
         $scope.$watchCollection('user.guardians', username => {
             eventBuffer(500, 'updateUser', 'user');
         });
-
 
         $scope.phoneNumberFormat = function(number) {
             number = number.match(/[\d+.+]/g);
@@ -121,6 +145,13 @@ angular.module('AuditionFormApp', ['ngMaterial'])
                 }
             }
         }
+
+        $scope.updateUserName = function (event) {
+            let name = event.target.value.split(' ');
+            $scope.user.name.first = name[0];
+            $scope.user.name.last = name[1];
+        }
+
     module.exports.user = $scope.user;
 }])
 
@@ -156,7 +187,6 @@ angular.module('AuditionFormApp', ['ngMaterial'])
         }
     }])
 }())
-
 
 
 

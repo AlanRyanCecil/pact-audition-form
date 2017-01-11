@@ -16,11 +16,17 @@ let userDatabaseDirectory = app.getPath('desktop'),
 function userHistory() {
     user = audition.user;
     userKey = verification.getUserKey(user);
+    console.log('new user key from history: ', userKey);
     userDatabase = inFile.getExistingOrCreateNewFile(userDatabaseDirectory, 'userDatabase.json');
     return verification.userLookup(userKey, userDatabase);
 }
 
-ipc.on('updateUser', (event, userOrAdmin) => {
+ipc.on('updateUser', (event, userOrAdmin, newName, oldName) => {
+    if (oldName) {
+        userDatabase = JSON.parse(userDatabase);
+        userDatabase.Key = verification.getUserKey(audition.user);
+        userDatabase = JSON.stringify(userDatabase);
+    }
     let fileName = userOrAdmin.concat('Database.json');
     console.log('attempted update');
     if (userHistory()) {

@@ -1,8 +1,8 @@
 <div>
     <form id="main-form">
         <md-content>
-            <input class="name-headder" value="{{ user.name.first }}">
-            <input class="name-headder" value="{{ user.name.last }}">
+            <input class="name-headder" value="{{ user.name.first + ' ' + user.name.last }}" ng-blur="updateUserName($event)">
+            <!-- <input class="name-headder" value="{{ user.name.last }}"> -->
             <!-- <h3> {{ user.name.first + ' ' + user.name.last }} </h3> -->
             <hr>
         </md-content>

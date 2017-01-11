@@ -1,20 +1,18 @@
-<div ng-show="indi" ng-repeat="user in userDatabase" layout="row" layout-align="center center" style="width: 100vw;">
-    <md-card ng-click="cardToggle($index)" id="user{{ $index }}" flex="60">
-        <md-card-title>
-            <md-card-title-text>
-                <span class="md-headline"> {{ user.name.first + ' ' + user.name.last }} </span>
-                <span class="md-subhead">age {{ 15 }}</span>
-                <span class="md-subhead">height {{ user.height }}</span>
-                <span class="md-subhead">{{ user.homePhone }}</span>
-                <span class="md-subhead">{{ user.email }}</span>
-            </md-card-title-text>
-            <md-card-title-media>
-                <div class="md-media-sm card-media"></div>
-            </md-card-title-media>
-        </md-card-title>
-        <md-card-actions layout="row" layout-align="end center">
-            <md-button class="md-primary" ng-click="adminEditUser(user)">edit</md-button>
-            <md-button class="md-warn" ng-click="adminRemoveUser(user, $index)">remove</md-button>
-        </md-card-actions>
-    </md-card>
-</div>
+<md-card>
+    <md-card-title>
+        <md-card-title-text>
+            <span class="md-headline"> {{ user.name.first + ' ' + user.name.last }} </span>
+            <span class="md-subhead">age {{ 15 }}</span>
+            <span class="md-subhead">height {{ user.height }}</span>
+            <span class="md-subhead">{{ user.homePhone }}</span>
+            <span class="md-subhead">{{ user.email }}</span>
+        </md-card-title-text>
+        <md-card-title-media>
+            <div class="md-media-sm card-media"></div>
+        </md-card-title-media>
+    </md-card-title>
+    <md-card-actions layout="row" layout-align="end center">
+        <md-button class="md-primary" ng-click="adminEditUser(user)">edit</md-button>
+        <md-button class="md-warn" ng-click="adminRemoveUser(user, $index)">remove</md-button>
+    </md-card-actions>
+</md-card>
