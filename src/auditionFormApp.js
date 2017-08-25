@@ -14,6 +14,7 @@ angular.module('AuditionFormApp', ['ngMaterial'])
         $scope.hairColors = ['black', 'brown', 'blonde', 'auburn', 'red', 'gray', 'white'];
         $scope.roleSizes = ['small', 'large', 'any size'];
         $scope.yesorno = ['yes', 'no'];
+        $scope.userDatabase = [];
 
         const ipc = require('electron').ipcRenderer;
         const configTemp = require('./configTemplate.js');
@@ -34,8 +35,13 @@ angular.module('AuditionFormApp', ['ngMaterial'])
         }
 
         ipc.on('adminLogin', function(event, userDatabase) {
-            $scope.admin = true;
+            let arr = [];
             $scope.userDatabase = userDatabase;
+            $scope.admin = true;
+            Object.keys(userDatabase).map(key => {
+                arr.push(userDatabase[key].name.first + ' ' + userDatabase[key].name.last);
+            });
+            $scope.userDatabaseArray = arr;
             console.log('admin logged in!');
         });
 
@@ -53,15 +59,18 @@ angular.module('AuditionFormApp', ['ngMaterial'])
             }
         });
 
-        function showEditMessage (user) {
+        function showEditMessage (user, index, remove) {
             $mdDialog.show({
-                // $mdDialog.confirm({
-                    clickOutsideToClose: true,
-                    templateUrl: 'views/userCards.html',
-                    controller: function (scope, user) {scope.user = user},
-                    locals: {user: user}
-                    // ok: 'close'
-                // })
+                clickOutsideToClose: true,
+                templateUrl: 'views/userCards.html',
+                controller: function (scope) {
+                    scope.user = user,
+                    scope.index = index,
+                    scope.remove = remove
+                },
+                // locals: {
+                //     user: xuser
+                // }
            })
                 // .finally(function () {
                     
@@ -69,13 +78,12 @@ angular.module('AuditionFormApp', ['ngMaterial'])
         }
 
         $scope.editUser = function (index) {
-            let userArr = [];
+            let userKeyArr = [];
             for (let key in $scope.userDatabase) {
-                userArr.push(key);
+                userKeyArr.push(key);
             }
-            $scope.editingUser = $scope.userDatabase[userArr[index]];
-            showEditMessage($scope.editingUser);
-            console.log($scope.userDatabase[userArr[index]].name.first, $scope.userDatabase[userArr[index]].name.last);
+            $scope.editingUser = $scope.userDatabase[userKeyArr[index]];
+            showEditMessage($scope.editingUser, index, $scope.adminRemoveUser);
         }
 
         $scope.removeUser = function (index) {
@@ -88,7 +96,7 @@ angular.module('AuditionFormApp', ['ngMaterial'])
 
         $scope.adminRemoveUser = function (user, index) {
             ipc.send('removeUser', user);
-            angular.element(`#user${index}`).slideUp();
+            angular.element(`#user-line${index}`).slideUp();
         }
 
         $scope.addGuardian = function () {

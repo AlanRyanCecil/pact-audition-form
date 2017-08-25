@@ -1,8 +1,9 @@
 <section layout="column" layout-align="center center" ng-show="admin">
     <!-- <md-autocomplete ng-model="adminSearch" placeholder="search"><md-item-template> -->
     <ul>
-        <li id="user-line{{$index}}" ng-repeat="user in userDatabase">
-            <md-button class="md-primary" ng-click="editUser($index)"> {{ user.name.first + ' ' + user.name.last }} </md-button>
+        <li id="user-line{{$index}}" ng-repeat="user in userDatabaseArray track by $index">
+            <md-button class="md-primary" ng-click="editUser($index)"> {{ user }} </md-button>
+            <!-- <md-button class="md-primary" ng-click="editUser($index)"> {{ user.name.first + ' ' + user.name.last }} </md-button> -->
             <!-- <md-button class="md-warn" ng-click="removeUser($index)">x</md-button> -->
         </li>
     </ul>
